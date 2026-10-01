@@ -1,0 +1,320 @@
+{
+  "info": {
+    "_postman_id": "b6f69210-de0a-462e-9f17-ef927b317bd8",
+    "name": "CampusGO API 2026",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "49006252"
+  },
+  "item": [
+    {
+      "name": "Viajes",
+      "item": [
+        {
+          "name": "Crear Viaje",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "",
+                "value": "",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{   \r\n    \"origen\": \"USAT\",\r\n    \"destino\": \"Chiclayo Centro\",\r\n    \"fecha\": \"2026-09-24\",\r\n    \"hora\": \"18:30:00\",\r\n    \"cupos\": 4,\r\n    \"precio\": 4.50 \r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/viajes",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "viajes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Viajes",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "",
+                "value": "",
+                "disabled": true
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/viajes",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "viajes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtrar Viajes",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "",
+                "value": "",
+                "disabled": true
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/viajes?destino=Chiclayo&estado=DISPONIBLE",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "viajes"
+              ],
+              "query": [
+                {
+                  "key": "destino",
+                  "value": "Chiclayo"
+                },
+                {
+                  "key": "estado",
+                  "value": "DISPONIBLE"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Detalle Viaje",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "",
+                "value": "",
+                "disabled": true
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/viajes/1",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "viajes",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Viaje",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "",
+                "value": "",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{   \r\n    \"origen\": \"USAT\",\r\n    \"destino\": \"Chiclayo Centro\",\r\n    \"fecha\": \"2026-09-24\",\r\n    \"hora\": \"18:30:00\",\r\n    \"cupos\": 4,\r\n    \"precio\": 4.50 \r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/viajes/:id",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "viajes",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Reservas",
+      "item": [
+        {
+          "name": "Crear Reserva",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \r\n    \"viajes\": [ \r\n        { \r\n            \"viaje_id\": 10, \r\n            \"cantidad\": 1, \r\n            \"tipo_tramo\": \"IDA\" \r\n        }, \r\n        { \r\n            \"viaje_id\": 25, \r\n            \"cantidad\": 1, \r\n            \"tipo_tramo\": \"RETORNO\" \r\n        } \r\n    ] \r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/reservas",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "reservas"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cancelar Reserva",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/reservas/:id",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "reservas",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "2"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var response = JSON.parse(responseBody)\r",
+              "pm.environment.set('token', response.data.token)"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"juan.perez@usat.edu.pe\",\r\n  \"password\": \"CampusGo#2026\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{url}}/auth/login",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Perfil",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "",
+            "value": "",
+            "type": "text",
+            "disabled": true
+          }
+        ],
+        "url": {
+          "raw": "{{url}}/perfil",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "perfil"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}
