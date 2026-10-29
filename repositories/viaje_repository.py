@@ -231,6 +231,10 @@ class ViajeRepository:
                     c.usuario_id AS conductor_usuario_id,
                     c.calificacion,
                     c.licencia,
+                    u.id AS conductor_id_usuario,
+                    u.nombres AS conductor_nombres,
+                    u.apellidos AS conductor_apellidos,
+                    u.foto_url AS conductor_foto_url,
                     CONCAT(u.nombres, ' ', u.apellidos) AS conductor
                 FROM viaje v
                 INNER JOIN conductor c ON c.id = v.conductor_id
@@ -239,6 +243,31 @@ class ViajeRepository:
             """
             cursor.execute(sql, (viaje_id,))
             return cursor.fetchone()
+        finally:
+            cursor.close()
+
+    def obtener_pasajeros_por_viaje(self, viaje_id):
+        cursor = self.connection.cursor()
+        try:
+            sql = """
+                SELECT DISTINCT
+                    u.id AS usuario_id,
+                    u.nombres,
+                    u.apellidos,
+                    u.foto_url,
+                    rv.cantidad
+                FROM reserva_viaje rv
+                INNER JOIN reserva r ON r.id = rv.reserva_id
+                INNER JOIN pasajero p ON p.id = r.pasajero_id
+                INNER JOIN usuario u ON u.id = p.usuario_id
+                WHERE rv.viaje_id = %s
+                  AND rv.estado = 'CONFIRMADA'
+                  AND r.estado = 'CONFIRMADA'
+                  AND u.estado = 'ACTIVO'
+                ORDER BY u.nombres, u.apellidos
+            """
+            cursor.execute(sql, (viaje_id,))
+            return cursor.fetchall()
         finally:
             cursor.close()
 

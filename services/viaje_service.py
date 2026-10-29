@@ -16,6 +16,22 @@ class ViajeService:
         }
         return viaje
 
+    @staticmethod
+    def _agregar_detalle_personas(viaje, pasajeros):
+        viaje["conductor"] = {
+            "usuario_id": viaje.get("conductor_id_usuario"),
+            "nombres": viaje.get("conductor_nombres"),
+            "apellidos": viaje.get("conductor_apellidos"),
+            "foto_url": viaje.get("conductor_foto_url"),
+            "calificacion": (
+                float(viaje["calificacion"])
+                if viaje.get("calificacion") is not None
+                else None
+            ),
+        }
+        viaje["pasajeros"] = pasajeros
+        return viaje
+
     def crear(self, usuario_id, datos):
         obligatorios = ["origen", "destino", "fecha", "hora", "cupos", "precio"]
 
@@ -120,6 +136,8 @@ class ViajeService:
                 viaje["fecha"]=viaje["fecha"].isoformat()
 
             self._agregar_vehiculo(viaje)
+            pasajeros = repository.obtener_pasajeros_por_viaje(viaje_id)
+            self._agregar_detalle_personas(viaje, pasajeros)
             return viaje, "Viaje obtenido correctamente", 200
         finally:
             connection.close()
