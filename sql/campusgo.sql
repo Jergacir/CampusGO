@@ -8,6 +8,9 @@ CREATE TABLE usuario (
     password_hash VARCHAR(255) NOT NULL,
     nombres VARCHAR(100) NOT NULL,
     apellidos VARCHAR(100) NOT NULL,
+    foto VARCHAR(255) NULL,
+    foto_url VARCHAR(500) NULL,
+    foto_public_id VARCHAR(255) NULL,
     rol ENUM('PASAJERO','CONDUCTOR','ADMINISTRADOR') NOT NULL,
     estado ENUM('ACTIVO','INACTIVO') NOT NULL DEFAULT 'ACTIVO',
     fecha_registro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -24,6 +27,12 @@ CREATE TABLE conductor (
     usuario_id INT NOT NULL UNIQUE,
     licencia VARCHAR(30),
     calificacion DECIMAL(3,2) DEFAULT 0,
+    marca_auto VARCHAR(80) NULL,
+    modelo_auto VARCHAR(80) NULL,
+    placa_auto VARCHAR(20) NULL,
+    color_auto VARCHAR(40) NULL,
+    foto_auto_url VARCHAR(500) NULL,
+    foto_auto_public_id VARCHAR(255) NULL,
     FOREIGN KEY (usuario_id) REFERENCES usuario(id)
 );
 
@@ -36,6 +45,11 @@ CREATE TABLE viaje (
     hora TIME NOT NULL,
     cupos INT NOT NULL,
     precio DECIMAL(10,2) NOT NULL,
+    marca_auto VARCHAR(80) NULL,
+    modelo_auto VARCHAR(80) NULL,
+    placa_auto VARCHAR(20) NULL,
+    color_auto VARCHAR(40) NULL,
+    foto_auto_url VARCHAR(500) NULL,
     estado ENUM('DISPONIBLE','COMPLETO','FINALIZADO','CANCELADO') NOT NULL DEFAULT 'DISPONIBLE',
     fecha_registro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (conductor_id) REFERENCES conductor(id)

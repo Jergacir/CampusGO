@@ -12,3 +12,10 @@ class Config:
     MYSQL_DATABASE = os.getenv("MYSQL_DATABASE", "campusgo")
     JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "campusgo-clave-secreta-cambiar")
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=2)
+    CLOUDINARY_CLOUD_NAME = os.getenv("CLOUDINARY_CLOUD_NAME")
+    CLOUDINARY_API_KEY = os.getenv("CLOUDINARY_API_KEY")
+    CLOUDINARY_API_SECRET = os.getenv("CLOUDINARY_API_SECRET")
+    PROFILE_PHOTO_DIR = os.getenv(
+        "PROFILE_PHOTO_DIR",
+        os.path.join(os.getcwd(), "uploads", "perfiles")
+    )

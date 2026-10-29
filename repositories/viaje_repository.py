@@ -13,15 +13,18 @@ class ViajeRepository:
         finally:
             cursor.close()
 
-    def crear(self, conductor_id, datos):
+    def crear(self, conductor_id, datos, vehiculo=None):
         cursor = self.connection.cursor()
         try:
             sql = """
                 INSERT INTO viaje (
                     conductor_id, origen, destino, fecha,
-                    hora, cupos, precio, estado
+                    hora, cupos, precio, estado,
+                    marca_auto, modelo_auto, placa_auto,
+                    color_auto, foto_auto_url
                 )
-                VALUES (%s, %s, %s, %s, %s, %s, %s, 'DISPONIBLE')
+                VALUES (%s, %s, %s, %s, %s, %s, %s, 'DISPONIBLE',
+                        %s, %s, %s, %s, %s)
             """
             cursor.execute(sql, (
                 conductor_id,
@@ -30,7 +33,12 @@ class ViajeRepository:
                 datos["fecha"],
                 datos["hora"],
                 datos["cupos"],
-                datos["precio"]
+                datos["precio"],
+                vehiculo.get("marca_auto") if vehiculo else None,
+                vehiculo.get("modelo_auto") if vehiculo else None,
+                vehiculo.get("placa_auto") if vehiculo else None,
+                vehiculo.get("color_auto") if vehiculo else None,
+                vehiculo.get("foto_auto_url") if vehiculo else None,
             ))
             return cursor.lastrowid
         finally:
@@ -43,6 +51,8 @@ class ViajeRepository:
                 SELECT 
                     v.id, v.origen, v.destino, v.fecha, v.hora,
                     v.cupos, v.precio, v.estado,
+                    v.marca_auto, v.modelo_auto, v.placa_auto,
+                    v.color_auto, v.foto_auto_url,
                     CONCAT(u.nombres, ' ', u.apellidos) AS conductor
                 FROM viaje v
                 INNER JOIN conductor c ON c.id = v.conductor_id
@@ -99,6 +109,21 @@ class ViajeRepository:
                 WHERE v.id = %s
             """
             cursor.execute(sql, (viaje_id,))
+            return cursor.fetchone()
+        finally:
+            cursor.close()
+
+    def obtener_vehiculo_por_conductor(self, conductor_id):
+        cursor = self.connection.cursor()
+        try:
+            sql = """
+                SELECT marca_auto, modelo_auto, placa_auto,
+                       color_auto, foto_auto_url
+                FROM conductor
+                WHERE id = %s
+                LIMIT 1
+            """
+            cursor.execute(sql, (conductor_id,))
             return cursor.fetchone()
         finally:
             cursor.close()

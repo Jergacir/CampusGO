@@ -6,6 +6,7 @@ from routes.usuario_routes import usuario_bp
 from routes.auth_routes import auth_bp
 from routes.viaje_routes import viaje_bp
 from routes.reserva_routes import reserva_bp
+from routes.conductor_routes import conductor_bp
 
 def create_app():
     app = Flask(__name__)
@@ -18,6 +19,7 @@ def create_app():
     app.register_blueprint(usuario_bp)
     app.register_blueprint(viaje_bp)
     app.register_blueprint(reserva_bp)
+    app.register_blueprint(conductor_bp)
 
     @app.get("/")
     def inicio():

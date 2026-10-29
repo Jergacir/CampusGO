@@ -5,6 +5,17 @@ from datetime import timedelta, date, datetime
 
 class ViajeService:
 
+    @staticmethod
+    def _agregar_vehiculo(viaje):
+        viaje["vehiculo"] = {
+            "marca": viaje.get("marca_auto"),
+            "modelo": viaje.get("modelo_auto"),
+            "placa": viaje.get("placa_auto"),
+            "color": viaje.get("color_auto"),
+            "foto_url": viaje.get("foto_auto_url"),
+        }
+        return viaje
+
     def crear(self, usuario_id, datos):
         obligatorios = ["origen", "destino", "fecha", "hora", "cupos", "precio"]
 
@@ -29,7 +40,8 @@ class ViajeService:
             if repository.existe_viaje_duplicado(conductor_id, datos["fecha"], datos["hora"], datos["origen"], datos["destino"]):
                 return None, "Ya tiene un viaje programado para la misma fecha, hora y ruta", 409
 
-            viaje_id = repository.crear(conductor_id, datos)
+            vehiculo = repository.obtener_vehiculo_por_conductor(conductor_id)
+            viaje_id = repository.crear(conductor_id, datos, vehiculo)
             connection.commit()
 
             return {"viaje_id": viaje_id}, "Viaje creado correctamente", 201
@@ -80,6 +92,7 @@ class ViajeService:
             )
 
             for viaje in viajes:
+                self._agregar_vehiculo(viaje)
                 if isinstance(viaje.get("hora"), timedelta):
                     viaje["hora"] = str(viaje["hora"])
                 if viaje.get("fecha") and hasattr(viaje["fecha"], "strftime"):
@@ -106,6 +119,7 @@ class ViajeService:
             if isinstance(viaje.get("fecha"), date):
                 viaje["fecha"]=viaje["fecha"].isoformat()
 
+            self._agregar_vehiculo(viaje)
             return viaje, "Viaje obtenido correctamente", 200
         finally:
             connection.close()
@@ -176,6 +190,7 @@ class ViajeService:
             viajes = repository.listar_por_conductor(conductor_id, estado)
 
             for v in viajes:
+                self._agregar_vehiculo(v)
                 if isinstance(v.get("hora"), timedelta):
                     v["hora"] = str(v["hora"])
                 if v.get("fecha") and hasattr(v["fecha"], "strftime"):
